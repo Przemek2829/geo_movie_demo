@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prezentacja Walkthrough 3D | Real Estate Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0a0a0a;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 12px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* No scroll on body */
+        }
+
+        .header-panel {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+            /* Header won't shrink */
+        }
+
+        .header-panel h1 {
+            margin: 0;
+            font-size: 20px;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .header-panel p {
+            margin: 4px 0 0;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            /* Occupy remaining height */
+            width: 100%;
+            align-items: stretch;
+            min-height: 0;
+            /* Crucial for flex child sizing */
+        }
+
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .video-container {
+            flex: 4;
+        }
+
+        .map-container {
+            flex: 6;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #aaa;
+            margin-bottom: 8px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Don't stretch video */
+            background: #000;
+            border-radius: 10px;
+            border: 1px solid #333;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        #my-map-widget-container {
+            width: 100%;
+            flex: 1;
+            /* Fill remaining height in section */
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                overflow: auto;
+                height: auto;
+            }
+
+            .main-layout {
+                flex-direction: column;
+            }
+
+            #my-map-widget-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-panel">
+        <h1>Interaktywny Spacer Po Nieruchomości</h1>
+        <p>Prezentacja wideo zsynchronizowana z interaktywnym rzutem budynku</p>
+    </div>
+
+    <div class="main-layout">
+        <!-- Sekcja Wideo -->
+        <div class="content-section video-container">
+            <div class="section-title">Prezentacja Wideo</div>
+            <video id="my-client-video" controls>
+                <source src="" type="video/mp4">
+                Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+            </video>
+        </div>
+
+        <!-- Sekcja Mapy -->
+        <div class="content-section map-container">
+            <div class="section-title">Rzut Interaktywny</div>
+            <div id="my-map-widget-container"></div>
+        </div>
+    </div>
+
+    <!-- Skrypty -->
+    <script>
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            var message = 'Błąd JS: ' + msg + '\nLinia: ' + lineNo + '\nPlik: ' + url;
+            alert(message);
+            return false;
+        };
+        window.onunhandledrejection = function(event) {
+            alert('Uncaught Promise Rejection: ' + event.reason);
+        };
+    </script>
+    <script src="geo-movie-widget.js"></script>
+    <script>
+        const widget = new GeoMovieWidget({
+            container: '#my-map-widget-container',
+            videoElement: '#my-client-video',
+            projectUrl: 'assets/data.json',
+            mapMode: 'fit',
+            autoSetVideoSrc: true
+        });
+    </script>
+</body>
+
+</html>
