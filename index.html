@@ -146,16 +146,6 @@
     </div>
 
     <!-- Skrypty -->
-    <script>
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            var message = 'Błąd JS: ' + msg + '\nLinia: ' + lineNo + '\nPlik: ' + url;
-            alert(message);
-            return false;
-        };
-        window.onunhandledrejection = function(event) {
-            alert('Uncaught Promise Rejection: ' + event.reason);
-        };
-    </script>
     <script src="geo-movie-widget.js"></script>
     <script>
         const widget = new GeoMovieWidget({

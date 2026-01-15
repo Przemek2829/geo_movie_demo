@@ -5,7 +5,7 @@
             "default",
             {
                 "map_data": {
-                    "basemap": "assets/plan.png",
+                    "basemap": "C:/Users/wizipisi/Desktop/TEMP/GeoMovie/projekty/sample2/plan.png",
                     "99": {
                         "geometry": [
                             [
@@ -808,7 +808,7 @@
                 },
                 "movies": {
                     "2": {
-                        "path": "assets/film.mp4",
+                        "path": "C:/Users/wizipisi/Desktop/TEMP/GeoMovie/projekty/sample2/film.mp4",
                         "connected_segment": "99"
                     }
                 }

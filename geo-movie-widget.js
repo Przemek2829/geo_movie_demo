@@ -74,7 +74,7 @@ class GeoMovieWidget {
         this._setupDOM();
         this._setupEvents();
 
-        console.log("GeoMovieWidget v3.9 - Extreme Debug + Marker Fix");
+        console.log("GeoMovieWidget v3.1 - Interpolation Recovery");
         window.geoWidget = this; // Global access for debugging scale/state
 
         // Start Loading
@@ -493,50 +493,10 @@ class GeoMovieWidget {
     _finalizeInitialization(mapData) {
         const w = this.basemapImg.naturalWidth;
         const h = this.basemapImg.naturalHeight;
-
-        // v3.9: EVEN MORE AGGRESSIVE LIMIT for mobile
-        const MAX_CANVAS_SIZE = 1024;
-        this.canvasScale = 1.0;
-        if (w > MAX_CANVAS_SIZE || h > MAX_CANVAS_SIZE) {
-            this.canvasScale = MAX_CANVAS_SIZE / Math.max(w, h);
-            console.log(`Canvas too large. Scaling to ${this.canvasScale.toFixed(3)}`);
-        }
-        const canvasW = Math.floor(w * this.canvasScale);
-        const canvasH = Math.floor(h * this.canvasScale);
-        console.log(`Canvas=${canvasW}x${canvasH}, Display=${w}x${h}`);
-
         this.transformLayer.style.width = w + 'px';
         this.transformLayer.style.height = h + 'px';
-        this.geometryCanvas.width = canvasW;
-        this.geometryCanvas.height = canvasH;
-        this.markerCanvas.width = canvasW;
-        this.markerCanvas.height = canvasH;
-        this.geometryCanvas.style.width = w + 'px';
-        this.geometryCanvas.style.height = h + 'px';
-        this.geometryCanvas.style.display = 'block';
-        this.geometryCanvas.style.opacity = '1';
-        this.geometryCanvas.style.visibility = 'visible';
-        this.markerCanvas.style.width = w + 'px';
-        this.markerCanvas.style.height = h + 'px';
-        this.markerCanvas.style.display = 'block';
-        this.markerCanvas.style.opacity = '1';
-        this.markerCanvas.style.visibility = 'visible';
-
-        // v3.9: Add debug overlay (DOM element, not canvas)
-        if (!this.debugRect) {
-            this.debugRect = document.createElement('div');
-            this.debugRect.style.position = 'absolute';
-            this.debugRect.style.top = '0';
-            this.debugRect.style.left = '0';
-            this.debugRect.style.width = '400px';
-            this.debugRect.style.height = '400px';
-            this.debugRect.style.background = 'rgba(255, 0, 0, 0.3)';
-            this.debugRect.style.border = '5px solid red';
-            this.debugRect.style.pointerEvents = 'none';
-            this.debugRect.style.zIndex = '1000';
-            this.debugRect.innerHTML = '<div style="color:white;background:black;padding:10px;font-size:20px;">DEBUG: Canvas should be here</div>';
-            this.transformLayer.appendChild(this.debugRect);
-        }
+        this.geometryCanvas.width = w; this.geometryCanvas.height = h;
+        this.markerCanvas.width = w; this.markerCanvas.height = h;
 
         this.resetView();
         this._drawGeometry(mapData);
@@ -557,19 +517,6 @@ class GeoMovieWidget {
         const h = this.geometryCanvas.height;
 
         ctx.clearRect(0, 0, w, h);
-
-        // v3.8: Scale context to match canvas downscaling
-        ctx.save();
-        const s = this.canvasScale || 1.0;
-        ctx.scale(s, s);
-
-        // ALWAYS draw test rectangle to confirm canvas works
-        ctx.fillStyle = 'rgba(255, 255, 0, 0.5)';
-        ctx.fillRect(50, 50, 300, 300);
-        ctx.strokeStyle = '#ff0';
-        ctx.lineWidth = 5;
-        ctx.strokeRect(50, 50, 300, 300);
-
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
@@ -612,7 +559,7 @@ class GeoMovieWidget {
         ctx.lineWidth = 1;
         ctx.stroke(path);
 
-        ctx.restore(); // v3.8: Restore scaled context
+        ctx.setLineDash([]);
     }
 
     _prepareWalker(mapData, connectedSegmentId) {
